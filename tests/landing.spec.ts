@@ -159,7 +159,8 @@ test("hero copy stays centred and unclipped while the face strip bleeds off both
     }
     if (width < 1200) {
       const faces = (await page.locator(".faces-left").boundingBox())!;
-      expect(Math.abs(faces.x + faces.width / 2 - width / 2), `face strip centre at ${width}`).toBeLessThan(2);
+      expect(Math.abs(faces.x + faces.width / 2 - width / 2), `face strip row centre at ${width}`).toBeLessThan(2);
+      await expect(page.locator(".faces-left"), `face strip image centred at ${width}`).toHaveCSS("background-position", "50% 50%");
     }
   }
 });
