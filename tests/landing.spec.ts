@@ -110,8 +110,9 @@ test("follows the Figma arrangement at mobile, tablet and desktop", async ({ pag
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto("/");
   await expect(page.locator("h1")).toHaveCSS("font-size", "40px");
-  let faces = await box(".faces-left");
-  expect(Math.round(faces.width)).toBe(433);
+  const stripWidth = () => page.locator(".faces-left").evaluate(element => Math.round(parseFloat(getComputedStyle(element).backgroundSize)));
+  expect(await stripWidth()).toBe(433);
+  expect(Math.round((await box(".faces-left")).height)).toBe(160);
   const [blue, purple] = [await box(".actions .button-blue"), await box(".actions .button-purple")];
   expect(purple.y).toBeGreaterThan(blue.y + blue.height);
   let photos = await page.locator(".collage img").evaluateAll(images => images.map(image => image.getBoundingClientRect()).map(rect => ({ x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) })));
@@ -120,8 +121,8 @@ test("follows the Figma arrangement at mobile, tablet and desktop", async ({ pag
 
   await page.setViewportSize({ width: 768, height: 1024 });
   await expect(page.locator("h1")).toHaveCSS("font-size", "48px");
-  faces = await box(".faces-left");
-  expect(Math.round(faces.width)).toBe(820);
+  expect(await stripWidth()).toBe(820);
+  expect(Math.round((await box(".faces-left")).height)).toBe(303);
   photos = await page.locator(".collage img").evaluateAll(images => images.map(image => image.getBoundingClientRect()).map(rect => ({ x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) })));
   expect(photos.map(photo => [photo.x, photo.w, photo.h])).toEqual([[44, 152, 160], [220, 152, 160], [396, 152, 160], [572, 152, 160]]);
   expect(Math.round((await box(".cta-band")).height)).toBe(320);
@@ -158,7 +159,8 @@ test("hero copy stays centred and unclipped while the face strip bleeds off both
     }
     if (width < 1200) {
       const faces = (await page.locator(".faces-left").boundingBox())!;
-      expect(Math.abs(faces.x + faces.width / 2 - width / 2), `face strip centre at ${width}`).toBeLessThan(2);
+      expect(Math.abs(faces.x + faces.width / 2 - width / 2), `face strip row centre at ${width}`).toBeLessThan(2);
+      await expect(page.locator(".faces-left"), `face strip image centred at ${width}`).toHaveCSS("background-position", "50% 50%");
     }
   }
 });
@@ -187,4 +189,25 @@ test("content and the What is it? link work without JavaScript", async ({ browse
   await page.getByRole("link", { name: "What is it?" }).click();
   await expect(page).toHaveURL(/#what-is-it$/);
   await context.close();
+});
+
+/* QA sweep October 8 (STS2, RS2): below 884 px the face strip was a box wider than the hero row, held in place by negative margins. */
+test("every hero box stays inside the hero row while the face strip still bleeds to the viewport edges", async ({ page }) => {
+  for (const width of [320, 375, 400, 480, 600, 768, 880, 1024]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const spill = await page.evaluate(() => {
+      const row = document.querySelector(".hero-inner")!;
+      const bounds = row.getBoundingClientRect();
+      const outside = [...row.children].filter(child => {
+        const box = child.getBoundingClientRect();
+        return box.width > 0 && (box.left < bounds.left - 1 || box.right > bounds.right + 1);
+      }).map(child => child.className);
+      return { scroll: row.scrollWidth - row.clientWidth, outside };
+    });
+    expect(spill, `at ${width}`).toEqual({ scroll: 0, outside: [] });
+    const strip = await page.locator(".faces-left").evaluate(element => parseFloat(getComputedStyle(element).backgroundSize));
+    // The strip is capped at its 820px design width; below that it bleeds off both viewport edges.
+    expect(strip, `strip width at ${width}`).toBeGreaterThan(Math.min(width, 820) - 1);
+  }
 });

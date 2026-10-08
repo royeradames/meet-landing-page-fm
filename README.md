@@ -16,7 +16,7 @@ The original starter README, `index.html` and preview are under `reference/`; su
 
 ## Implementation choices
 
-- The desktop layout starts at 1200px, the narrowest width that fits the 1120px design row. Below that the tablet arrangement (one combined face strip above centred copy) is used. The face clusters are decorative CSS backgrounds anchored to their columns as in Figma, and clip at the viewport edge.
+- The desktop layout starts at 1200px, the narrowest width that fits the 1120px design row. Below that the tablet arrangement (one combined face strip above centred copy) is used. The face clusters are decorative CSS backgrounds anchored to their columns as in Figma, and clip at the viewport edge. Below 1200px the combined strip is a centred background on a full-width row rather than a box wider than the hero, so nothing spills out of the hero row (width sweep, October 8, 2026).
 - Contrast: the design's grey `#87879d`, cyan `#4d96a9` text and white-on-`#4d96a9` buttons are about 3.3:1, under WCAG AA. Body grey becomes `#6e6e85`, the eyebrow `#367586`, and the resting button fills deepen to `#2f6d7d` and `#6f4a9a` with paler "v1.3" tints, all at least 4.5:1. Hover uses the design's exact lighter fills (`#71c0d4`, `#b18bdd`) with dark text, which also passes. The footer overlay is a 92% deep teal so its white text passes over the brightest part of the photo.
 - The design's 12px and 14px eyebrow and the 01/02 markers are held at the 16px family floor.
 - One site name, "Meet landing page", appears in the footer, `og:site_name` and `WebSite` JSON-LD. The canonical URL is the planned `meet-landing-page-fm.royeradames.com` production domain, which isn't attached yet.
