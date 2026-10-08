@@ -110,8 +110,9 @@ test("follows the Figma arrangement at mobile, tablet and desktop", async ({ pag
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto("/");
   await expect(page.locator("h1")).toHaveCSS("font-size", "40px");
-  let faces = await box(".faces-left");
-  expect(Math.round(faces.width)).toBe(433);
+  const stripWidth = () => page.locator(".faces-left").evaluate(element => Math.round(parseFloat(getComputedStyle(element).backgroundSize)));
+  expect(await stripWidth()).toBe(433);
+  expect(Math.round((await box(".faces-left")).height)).toBe(160);
   const [blue, purple] = [await box(".actions .button-blue"), await box(".actions .button-purple")];
   expect(purple.y).toBeGreaterThan(blue.y + blue.height);
   let photos = await page.locator(".collage img").evaluateAll(images => images.map(image => image.getBoundingClientRect()).map(rect => ({ x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) })));
@@ -120,8 +121,8 @@ test("follows the Figma arrangement at mobile, tablet and desktop", async ({ pag
 
   await page.setViewportSize({ width: 768, height: 1024 });
   await expect(page.locator("h1")).toHaveCSS("font-size", "48px");
-  faces = await box(".faces-left");
-  expect(Math.round(faces.width)).toBe(820);
+  expect(await stripWidth()).toBe(820);
+  expect(Math.round((await box(".faces-left")).height)).toBe(303);
   photos = await page.locator(".collage img").evaluateAll(images => images.map(image => image.getBoundingClientRect()).map(rect => ({ x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) })));
   expect(photos.map(photo => [photo.x, photo.w, photo.h])).toEqual([[44, 152, 160], [220, 152, 160], [396, 152, 160], [572, 152, 160]]);
   expect(Math.round((await box(".cta-band")).height)).toBe(320);

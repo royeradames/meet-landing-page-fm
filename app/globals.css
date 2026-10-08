@@ -58,20 +58,18 @@ h1, h2, p { margin: 0; }
 .download { display: contents; }
 .demo-note { order: 1; flex-basis: 100%; color: var(--muted); font-size: 1rem; font-weight: 500; line-height: 1.5; }
 
-.hero { overflow-x: clip; padding: 4rem 2rem 2rem; }
+.hero { overflow-x: clip; padding: 4rem 0 2rem; }
 .hero-inner { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; row-gap: 3rem; }
-/* The two desktop face clusters become one combined strip below 1200px: 433×160 at 375 up to 820×303 at 768. */
+/* The two desktop face clusters become one combined strip below 1200px: 433×160 at 375 up to 820×303 at 768.
+   The strip is a centred background on a full-width row, so it bleeds off both edges without a box wider than the hero. */
 .faces-left {
   --strip: min(51.25rem, calc(98.47vw + 4rem));
-  justify-self: start;
-  width: var(--strip);
-  /* Wider than its column on purpose: equal negative margins keep it centred while the hero clips both edges. */
-  margin-inline: calc((100% - var(--strip)) / 2);
-  aspect-ratio: 820 / 303;
-  background: url("/images/tablet/image-hero.png") center / contain no-repeat;
+  justify-self: stretch;
+  height: calc(var(--strip) * 303 / 820);
+  background: url("/images/tablet/image-hero.png") center / var(--strip) auto no-repeat;
 }
 .faces-right { display: none; }
-.hero-copy { display: grid; justify-items: center; row-gap: 1.5rem; max-width: 28rem; text-align: center; }
+.hero-copy { display: grid; justify-items: center; row-gap: 1.5rem; max-width: 28rem; margin-inline: 2rem; text-align: center; }
 h1 { font-size: 2.5rem; font-weight: 900; line-height: 1.1; }
 h1 .line { display: block; }
 .hero-copy > p, .features-copy > p:last-child { color: var(--muted); font-size: 1rem; font-weight: 500; line-height: 1.5; }
@@ -135,13 +133,13 @@ h2 { font-size: 2rem; font-weight: 900; line-height: 1.1; }
     align-items: center;
     min-height: 22.5rem;
   }
-  .faces { position: relative; align-self: stretch; justify-self: stretch; width: auto; margin-inline: 0; aspect-ratio: auto; background: none; }
+  .faces { position: relative; align-self: stretch; justify-self: stretch; height: auto; background: none; }
   .faces::before { content: ""; position: absolute; width: 24.625rem; height: 18.9375rem; background-size: contain; background-repeat: no-repeat; }
   /* Figma: left cluster spans x −26→368 against a column at 160→464; right cluster starts 96px into its column and 57px lower. */
   .faces-left::before { right: 6rem; top: 0; background-image: url("/images/desktop/image-hero-left.png"); }
   .faces-right { display: block; }
   .faces-right::before { left: 6rem; top: 3.5625rem; background-image: url("/images/desktop/image-hero-right.png"); }
-  .hero-copy { row-gap: 2rem; }
+  .hero-copy { row-gap: 2rem; margin-inline: 0; }
   h1 { font-size: 4rem; line-height: 1; }
   .hero-copy > p, .features-copy > p:last-child { font-size: 1.125rem; line-height: 1.5; }
   .features { padding: 3.5rem 2.5rem 4.5rem; }
