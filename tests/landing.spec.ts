@@ -207,6 +207,7 @@ test("every hero box stays inside the hero row while the face strip still bleeds
     });
     expect(spill, `at ${width}`).toEqual({ scroll: 0, outside: [] });
     const strip = await page.locator(".faces-left").evaluate(element => parseFloat(getComputedStyle(element).backgroundSize));
-    expect(strip, `the strip is wider than the viewport at ${width}`).toBeGreaterThan(width - 1);
+    // The strip is capped at its 820px design width; below that it bleeds off both viewport edges.
+    expect(strip, `strip width at ${width}`).toBeGreaterThan(Math.min(width, 820) - 1);
   }
 });
