@@ -188,3 +188,23 @@ test("content and the What is it? link work without JavaScript", async ({ browse
   await expect(page).toHaveURL(/#what-is-it$/);
   await context.close();
 });
+
+/* QA sweep October 8 (STS2, RS2): below 884 px the face strip was a box wider than the hero row, held in place by negative margins. */
+test("every hero box stays inside the hero row while the face strip still bleeds to the viewport edges", async ({ page }) => {
+  for (const width of [320, 375, 400, 480, 600, 768, 880, 1024]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const spill = await page.evaluate(() => {
+      const row = document.querySelector(".hero-inner")!;
+      const bounds = row.getBoundingClientRect();
+      const outside = [...row.children].filter(child => {
+        const box = child.getBoundingClientRect();
+        return box.width > 0 && (box.left < bounds.left - 1 || box.right > bounds.right + 1);
+      }).map(child => child.className);
+      return { scroll: row.scrollWidth - row.clientWidth, outside };
+    });
+    expect(spill, `at ${width}`).toEqual({ scroll: 0, outside: [] });
+    const strip = await page.locator(".faces-left").evaluate(element => parseFloat(getComputedStyle(element).backgroundSize));
+    expect(strip, `the strip is wider than the viewport at ${width}`).toBeGreaterThan(width - 1);
+  }
+});
