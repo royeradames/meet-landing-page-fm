@@ -75,7 +75,7 @@ h1 .line { display: block; }
 .hero-copy > p, .features-copy > p:last-child { color: var(--muted); font-size: 1rem; font-weight: 500; line-height: 1.5; }
 .actions { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-top: .5rem; }
 
-.section-number { display: flex; flex-direction: column; align-items: center; color: #87879d; }
+.section-number { display: flex; flex-direction: column; align-items: center; color: var(--muted); }
 .section-number::before { content: ""; width: 1px; height: 5rem; background: var(--line); }
 .section-number span { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 1px solid var(--line); border-radius: 50%; background: var(--canvas); font-size: 1rem; font-weight: 900; line-height: 1.5rem; }
 
@@ -154,5 +154,4 @@ h2 { font-size: 2rem; font-weight: 900; line-height: 1.1; }
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .button { transition: background-color .2s, color .2s; }
 }
