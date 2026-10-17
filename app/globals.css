@@ -66,7 +66,7 @@ h1, h2, p { margin: 0; }
   --strip: min(51.25rem, calc(98.47vw + 4rem));
   justify-self: stretch;
   height: calc(var(--strip) * 303 / 820);
-  background: url("/images/tablet/image-hero.png") center / var(--strip) auto no-repeat;
+  background: url("/images/tablet/image-hero.webp") center / var(--strip) auto no-repeat;
 }
 .faces-right { display: none; }
 .hero-copy { display: grid; justify-items: center; row-gap: 1.5rem; max-width: 28rem; margin-inline: 2rem; text-align: center; }
@@ -136,9 +136,9 @@ h2 { font-size: 2rem; font-weight: 900; line-height: 1.1; }
   .faces { position: relative; align-self: stretch; justify-self: stretch; height: auto; background: none; }
   .faces::before { content: ""; position: absolute; width: 24.625rem; height: 18.9375rem; background-size: contain; background-repeat: no-repeat; }
   /* Figma: left cluster spans x −26→368 against a column at 160→464; right cluster starts 96px into its column and 57px lower. */
-  .faces-left::before { right: 6rem; top: 0; background-image: url("/images/desktop/image-hero-left.png"); }
+  .faces-left::before { right: 6rem; top: 0; background-image: url("/images/desktop/image-hero-left.webp"); }
   .faces-right { display: block; }
-  .faces-right::before { left: 6rem; top: 3.5625rem; background-image: url("/images/desktop/image-hero-right.png"); }
+  .faces-right::before { left: 6rem; top: 3.5625rem; background-image: url("/images/desktop/image-hero-right.webp"); }
   .hero-copy { row-gap: 2rem; margin-inline: 0; }
   h1 { font-size: 4rem; line-height: 1; }
   .hero-copy > p, .features-copy > p:last-child { font-size: 1.125rem; line-height: 1.5; }
