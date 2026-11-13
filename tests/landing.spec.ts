@@ -182,7 +182,7 @@ test("fits 320 to 1440 and enlarged text with no overflow or text under 16px", a
 test("content and the What is it? link work without JavaScript", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4573/");
+  await page.goto("http://127.0.0.1:4582/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Group Chat for Everyone");
   await page.getByRole("link", { name: "What is it?" }).click();
   await expect(page).toHaveURL(/#what-is-it$/);
